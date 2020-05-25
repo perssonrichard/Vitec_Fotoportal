@@ -1,0 +1,18 @@
+{
+    "orderStatus": {
+        "created": "Skapad",
+        "inProgress": "Pågående",
+        "interactionRequired": "Interaktion krävs",
+        "error": "Fel",
+        "cancelled": "Avbruten",
+        "delivered": "Levererad"
+    },
+    "noOrdersInProgress": "Inga ordrar att visa",
+    "orderHeader": "ORDRAR",
+    "employer": "Uppdragsgivare",
+    "address": "Adress",
+    "orderDate": "Beställningsdatum",
+    "archiveDate": "Arkiveringsdatum",
+    "status": "Status",
+    "archiveHeader": "ARKIV"
+}

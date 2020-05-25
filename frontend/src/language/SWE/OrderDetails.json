@@ -1,0 +1,10 @@
+{
+    "backToOrdersLink": "Tillbaka till ordrar",
+    "orderDate": "Beställningsdatum: ",
+    "description": "Beskrivning",
+    "company": "Företag:",
+    "address": "Adress:",
+    "name": "Namn:",
+    "email": "E-post",
+    "phone": "Mobiltelefon"
+}

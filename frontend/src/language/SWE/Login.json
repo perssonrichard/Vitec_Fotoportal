@@ -1,0 +1,13 @@
+{
+  "title": "Fotoportalen",
+  "welcomeMessage": "Välkommen till fotoportalen",
+  "email": "E-post",
+  "password": "Lösenord",
+  "enterEmail": "E-postadress",
+  "enterPassword": "Lösenord",
+  "clickToRegister": "Registrera konto",
+  "login": "Logga in",
+  "alreadyLoggedIn": "Du är redan inloggad.",
+  "wrongCredentialsMessage": "Fel e-postadress eller lösenord",
+  "serverError": "Det verkar vara problem att logga in just nu, försök igen senare"
+}

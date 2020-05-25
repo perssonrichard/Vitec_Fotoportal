@@ -1,0 +1,51 @@
+{
+    "company": "Företag",
+    "orgnr": "Org.nr",
+    "address": "Adress",
+    "postalcode": "Postnummer",
+    "city": "Stad",
+    "email": "Epost",
+    "password": "Lösenord",
+    "changepassword": "Byt lösenord",
+    "currentpassword": "Nuvarande lösenord",
+    "newpassword": "Nytt lösenord",
+    "verifypassword": "Verifiera lösenord",
+    "repeatpassword": "Repetera nya lösenordet",
+    "firstname": "Förnamn",
+    "lastname": "Efternamn",
+    "cellphonenumber": "Mobiltelefon",
+    "avaliable": "Tillgänglig",
+    "postalcodearea": "Postnummerområden",
+    "btnactive": "Aktiv",
+    "btninactive": "Paus",
+    "accountmanager": {
+        "goback": "Tillbaka",
+        "header": "Redigera dina kontodetaljer",
+        "pwheader": "Ändra lösenord",
+        "removeaccountheader": "Avsluta konto",
+        "cancel": "Avbryt",
+        "save": "Spara ändringar",
+        "remove": "Avsluta konto",
+        "loading": "...laddar"
+    },
+    "register": {
+        "titleuserloggedin": "titleuserloggedin",
+        "titleregister": "Registrera konto",
+        "aboutcompany": "Företagsinformation",
+        "aboutcontactperson": "Fotograf",
+        "logindetails": "Inloggningsdetaljer",
+        "passwordmessage": "Lösenorden matchar inte",
+        "fillall": "Fyll i alla fält",
+        "register": "Registrera",
+        "goback": "Tillbaka"
+    },
+    "message": {
+        "success": "Allt gick bra!",
+        "wentgood": "Ditt nya lösenord är sparat",
+        "isnotsame": "Ditt nya lösenord stämmer inte överens med det bekräftade",
+        "varning": "Något gick fel!",
+        "wrongpassword": "Fel lösenord angavs vid sparandet, försök igen",
+        "wentwrong": "Sparandet av lösenordet fungerade inte, försök senare",
+        "wentwrongedit": "Sparandet av dina detaljer fungerade inte, försök senare"
+    }
+}

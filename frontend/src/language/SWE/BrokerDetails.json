@@ -1,0 +1,43 @@
+{
+    "informationonorder": {
+        "neworder": "Fotograferingsorder är skapad",
+        "orderupdated": "Order - fotograf är beställd",
+        "orderid": "Ordernummer",
+        "orderstatus": "Orderstatus",
+        "address": "Adress",
+        "city": "Stad",
+        "photographerinfo": "Info som skickas till fotograf",
+        "photographerinfosent": "Info som skickats till fotograf"
+    },
+    "informationonphotographer": {
+        "orgnr": "Org nr",
+        "contact": "Kontaktperson",
+        "cellphone": "Mobilnummer",
+        "email": "E-post"
+    },
+    "sendemail": {
+        "hello": "Hej",
+        "at": "på",
+        "hasbookedyouforphoto": "har bokat dig för fotografering på",
+        "in": "i",
+        "hasleftmessage": "har lämnat meddelandet:",
+        "automessage": "Detta är ett automatiskt meddelande och går inte att besvara.",
+        "thanks": "Tack på förhand, hälsningar"
+    },
+    "buttons": {
+        "send": "Skicka order",
+        "close": "Stäng",
+        "cancel": "Avbryt",
+        "continue": "Fortsätt",
+        "discard": "Kassera order"
+    },
+    "varnings": {
+        "archives": "Varning! Detta kommer att stoppa ordern och arkivera den.",
+        "error": "Hoppsan något gick fel!",
+        "emptyphotograph": "Fotografen hittades inte!",
+        "successheader": "Lyckad bokning!",
+        "successbooking": "Fotograf är nu bokad, ett automatiskt meddelande har skickats till vederbörande. Du kan stänga fotoportalen och återgå till Next",
+        "errorheader": "Hoppsan!",
+        "errorbooking": "Något gick fel, försök att genomföra din bokning på nytt senare"
+    }
+}
