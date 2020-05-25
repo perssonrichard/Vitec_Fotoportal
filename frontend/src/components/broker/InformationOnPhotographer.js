@@ -17,8 +17,11 @@ const InformationOnPhotographer = ({ photographer, email, jwt }) => {
 
   const getPhotographerInfo = () => {
     axios
-      .get(URL.SERVER_BROKER_GET_PHOTOGRAPHERS_URL + '/' + email, {
-        header: { Authorization: jwt }
+      .get(URL.SERVER_BROKER_GET_ONE_PHOTOGRAPHER_URL + '/' + email, {
+        headers: {
+          Authorization: jwt,
+          Accept: 'application/json'
+        }
       })
       .then(res => {
         if (res.data.photographer === null) {

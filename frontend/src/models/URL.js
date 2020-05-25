@@ -1,5 +1,5 @@
-const baseURL = 'https://api-fotoportal.azurewebsites.net/'
-// const baseURL = 'http://localhost:5000/'
+// const baseURL = 'https://api-fotoportal.azurewebsites.net/'
+const baseURL = 'http://localhost:5000/'
 
 const URL = {
   SERVER_EDIT_USER_URL: baseURL + 'api/photographer/',

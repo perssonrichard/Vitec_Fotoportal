@@ -34,6 +34,7 @@ const BrokerView = () => {
   const [message, setMessage] = useState()
   const [wentGood, setWentGood] = useState()
   const [wentWrong, setWentWrong] = useState()
+  // const [srcToken, setSrcToken] = useState()
 
   const updateOrderWithDescrAndPhotographer = () => {
     order.status = 1
@@ -197,7 +198,7 @@ const BrokerView = () => {
             ) : (
               <>
                 <InformationOnOrder order={order} />
-                <InformationOnPhotographer email={order.photographerEmail} />
+                <InformationOnPhotographer email={order.photographerEmail} jwt={jwt} />
               </>
             )}
             {wentGood ? (

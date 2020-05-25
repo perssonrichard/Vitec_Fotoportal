@@ -219,6 +219,27 @@ namespace Photobox.Controllers
             }
         }
 
+        // api/broker/photographer/{email} returns a photographerobject
+        [HttpGet ("photographer/{email}"), Authorize]
+        public IActionResult GetUser (string email)
+        {
+            try
+            {
+                Photographer photographer = _database.GetPhotographerByEmail (email);
+                IActionResult response = Ok (new
+                {
+                    photographer
+                });
+                return response;
+
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine (err.ToString ());
+                return StatusCode (500);
+            }
+        }
+
         private bool validBasicAuth (string basicAuthString) {
             string decodedUsername = DecodeBase64UserName (basicAuthString);
             string decodedPassword = DecodeBase64Pwd (basicAuthString);
