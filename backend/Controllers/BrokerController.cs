@@ -39,9 +39,9 @@ namespace Photobox.Controllers {
                     return StatusCode (StatusCodes.Status400BadRequest, new { message = "Request must contain an Authorization header." });
                 }
 
-                // if (!validBasicAuth (basicAuthString)) {
-                //     return StatusCode (StatusCodes.Status400BadRequest, new { message = "Request contains invalid value in Authorization header." });
-                // }
+                if (!validBasicAuth (basicAuthString)) {
+                    return StatusCode (StatusCodes.Status400BadRequest, new { message = "Request contains invalid value in Authorization header." });
+                }
 
                 DateTime thisDay = DateTime.Now;
                 order.regDate = thisDay;
@@ -202,9 +202,9 @@ namespace Photobox.Controllers {
         private bool validBasicAuth (string basicAuthString) {
             string decodedUsername = DecodeBase64UserName (basicAuthString);
             string decodedPassword = DecodeBase64Pwd (basicAuthString);
-            Console.WriteLine (decodedUsername);
-            Console.WriteLine (decodedPassword);
-            return (decodedUsername == "fotoportal" && decodedPassword == "oKokp123k!opkADndw7424a1");
+            string base64Username = (string)_config["NextBase64Credentials:Username"];
+            string base64Password = (string)_config["NextBase64Credentials:Password"];
+            return (decodedUsername == base64Username && decodedPassword == base64Password);
         }
 
         private string DecodeBase64UserName (string basicAuthString) {
