@@ -12,23 +12,18 @@ using Photobox.DB;
 using Photobox.Helpers;
 using Photobox.Models;
 
-namespace Photobox.Controllers
-{
+namespace Photobox.Controllers {
 
     [ApiController]
     [Route ("api/[controller]")]
 
-    public class BrokerController : ControllerBase
-    {
-        private const string BROKER_TOKEN_URL = "https://fotoportal.azurewebsites.net/maklare?token=";
+    public class BrokerController : ControllerBase {
         private const string AUTHENTICATION_VALUE = "Vml0ZWNmb3RvcG9ydGFsOmFtSzlzY0VnSnpNd1Bqckdack03bUNIY1llWEdsbmxDdEIyQ3JweHU0YTlIa25Eektn";
-
         private IConfiguration _config;
         private PhotoboxDB _database;
         private JWTHelper _jwtHelper;
 
-        public BrokerController (IConfiguration config, PhotoboxDB database)
-        {
+        public BrokerController (IConfiguration config, PhotoboxDB database) {
             _config = config;
             _database = database;
             _jwtHelper = new JWTHelper (config);
@@ -59,64 +54,52 @@ namespace Photobox.Controllers
                 _database.CreateOrder (order);
 
                 string tokenString = _jwtHelper.CreateBrokerJWT (order.orderId);
-                IActionResult response = Redirect ("https://fotoportal.azurewebsites.net/maklare?token=" + tokenString);
+                IActionResult response = Redirect (_config["SiteBaseUrl"] + "/maklare?token=" + tokenString);
                 return response;
 
             } catch (OrderAlreadyExistException err) {
                 Console.WriteLine (err);
                 return StatusCode (StatusCodes.Status409Conflict, new { message = "Order already exists." });
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return StatusCode (StatusCodes.Status500InternalServerError, new { message = "Internal server error." });
             }
         }
 
         [HttpGet, Authorize]
-        public ActionResult<Order> GetOrder ()
-        {
-            try
-            {
+        public ActionResult<Order> GetOrder () {
+            try {
                 var orderIdFromToken = HttpContext.User.FindFirst ("orderId").Value;
                 Order order = _database.GetOrderById (orderIdFromToken);
                 return order;
 
             } catch (ArgumentNullException) {
                 return StatusCode (StatusCodes.Status400BadRequest, new { message = "Request must contain an email." });
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return StatusCode (StatusCodes.Status500InternalServerError, new { message = "Internal server error." });
             }
         }
 
         [HttpPut ("order"), Authorize]
-        public async Task<IActionResult> UpdateOrder ([FromBody] UpdatedOrder order)
-        {
-            try
-            {
+        public async Task<IActionResult> UpdateOrder ([FromBody] UpdatedOrder order) {
+            try {
 
                 HttpContext.Request.Headers.TryGetValue ("Authorization", out var token);
 
                 var orderId = HttpContext.User.FindFirst ("orderId").Value;
                 Order orderInDb = _database.GetOrderById (orderId);
 
-                if (order == null)
-                {
+                if (order == null) {
                     return StatusCode (StatusCodes.Status400BadRequest, new { message = "Requested order does not exist." });
                 }
 
-                if (orderInDb.status == StatusType.Cancelled)
-                {
+                if (orderInDb.status == StatusType.Cancelled) {
                     return StatusCode (StatusCodes.Status400BadRequest, new { message = "Order is already cancelled. You can't edit details of an order after it is cancelled." });
                 }
 
-                if (orderInDb.status == StatusType.Created)
-                {
-                    if (order.status == StatusType.InProgress)
-                    {
+                if (orderInDb.status == StatusType.Created) {
+                    if (order.status == StatusType.InProgress) {
                         orderInDb.photographerEmail = order.photographerEmail;
                         orderInDb.description = order.description;
                         orderInDb.status = order.status;
@@ -126,16 +109,13 @@ namespace Photobox.Controllers
                         bool orderstatusChangedOnHub = await OrderController.ChangeOrderstatusOnHub (order, updatedMsg, token);
                         if (orderstatusChangedOnHub) {
                             return StatusCode (StatusCodes.Status200OK, new { message = updatedMsg });
-                        }
-                        else
-                        {
+                        } else {
                             return StatusCode (StatusCodes.Status400BadRequest, new { message = "Hub request did not succeed." });
                         }
                     }
                 }
 
-                if (order.status == StatusType.Cancelled)
-                {
+                if (order.status == StatusType.Cancelled) {
                     _database.UpdateOrderStatus (orderId, order.status);
                     string cancelledMsg = "Order 'Cancelled'.";
                     // Calling hub
@@ -152,13 +132,9 @@ namespace Photobox.Controllers
 
             } catch (ArgumentNullException) {
                 return StatusCode (StatusCodes.Status400BadRequest, new { message = "Put request must contain an orderId." });
-            }
-            catch (OrderDoesNotExistException)
-            {
+            } catch (OrderDoesNotExistException) {
                 return StatusCode (StatusCodes.Status400BadRequest, new { message = "The provided orderId does not exist." });
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return StatusCode (500);
             }
@@ -166,17 +142,13 @@ namespace Photobox.Controllers
 
         // TODO felhantering i denna
         [HttpPost ("estateinfo"), Authorize]
-        public async Task<IActionResult> GetEstateInfo ([FromBody] UpdatedOrder order)
-        {
-            try
-            {
+        public async Task<IActionResult> GetEstateInfo ([FromBody] UpdatedOrder order) {
+            try {
                 var result = await BrokerController.GetEstateInfoFromNext (order);
                 var response = Ok (new { result });
                 return response;
 
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return null;
             }
@@ -185,17 +157,13 @@ namespace Photobox.Controllers
         // TODO felhantering i denna
         // api/broker/brokerinfo
         [HttpPost ("brokerinfo"), Authorize]
-        public async Task<IActionResult> GetBrokerInfo ([FromBody] BrokerInfo brokerInfo)
-        {
-            try
-            {
+        public async Task<IActionResult> GetBrokerInfo ([FromBody] BrokerInfo brokerInfo) {
+            try {
                 var result = await BrokerController.GetBrokerInfoFromNext (brokerInfo);
                 var response = Ok (new { result });
                 return response;
 
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return null;
             }
@@ -203,17 +171,13 @@ namespace Photobox.Controllers
 
         // TODO felhantering i denna
         [HttpPost ("departmentinfo"), Authorize]
-        public async Task<IActionResult> GetDepartmentInfo ([FromBody] DepartmentInfo departmentInfo)
-        {
-            try
-            {
+        public async Task<IActionResult> GetDepartmentInfo ([FromBody] DepartmentInfo departmentInfo) {
+            try {
                 var result = await BrokerController.GetDepartmentInfoFromNext (departmentInfo);
                 var response = Ok (new { result });
                 return response;
 
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return null;
             }
@@ -221,20 +185,15 @@ namespace Photobox.Controllers
 
         // api/broker/photographer/{email} returns a photographerobject
         [HttpGet ("photographer/{email}"), Authorize]
-        public IActionResult GetUser (string email)
-        {
-            try
-            {
+        public IActionResult GetUser (string email) {
+            try {
                 Photographer photographer = _database.GetPhotographerByEmail (email);
-                IActionResult response = Ok (new
-                {
+                IActionResult response = Ok (new {
                     photographer
                 });
                 return response;
 
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err.ToString ());
                 return StatusCode (500);
             }
@@ -243,8 +202,8 @@ namespace Photobox.Controllers
         private bool validBasicAuth (string basicAuthString) {
             string decodedUsername = DecodeBase64UserName (basicAuthString);
             string decodedPassword = DecodeBase64Pwd (basicAuthString);
-            Console.WriteLine(decodedUsername);
-            Console.WriteLine(decodedPassword);
+            Console.WriteLine (decodedUsername);
+            Console.WriteLine (decodedPassword);
             return (decodedUsername == "fotoportal" && decodedPassword == "oKokp123k!opkADndw7424a1");
         }
 
@@ -277,19 +236,15 @@ namespace Photobox.Controllers
                 dynamic result = await client.GetStringAsync (uri);
                 result = JsonConvert.DeserializeObject<object> (result);
                 return result;
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return null;
             }
 
         }
 
-        private static async Task<Newtonsoft.Json.Linq.JObject> GetBrokerInfoFromNext (BrokerInfo brokerInfo)
-        {
-            try
-            {
+        private static async Task<Newtonsoft.Json.Linq.JObject> GetBrokerInfoFromNext (BrokerInfo brokerInfo) {
+            try {
                 HttpClient client = new HttpClient ();
 
                 // TODO put all hub url in a string constantfile
@@ -305,18 +260,14 @@ namespace Photobox.Controllers
                 result = JsonConvert.DeserializeObject<object> (result);
 
                 return result;
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return null;
             }
         }
 
-        private static async Task<Newtonsoft.Json.Linq.JObject> GetDepartmentInfoFromNext (DepartmentInfo departmentInfo)
-        {
-            try
-            {
+        private static async Task<Newtonsoft.Json.Linq.JObject> GetDepartmentInfoFromNext (DepartmentInfo departmentInfo) {
+            try {
                 HttpClient client = new HttpClient ();
 
                 // TODO put all hub url in a string constantfile
@@ -332,9 +283,7 @@ namespace Photobox.Controllers
                 result = JsonConvert.DeserializeObject<object> (result);
 
                 return result;
-            }
-            catch (Exception err)
-            {
+            } catch (Exception err) {
                 Console.WriteLine (err);
                 return null;
             }

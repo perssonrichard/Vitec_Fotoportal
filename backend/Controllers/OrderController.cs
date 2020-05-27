@@ -72,8 +72,8 @@ namespace Photobox.Controllers {
                 }
 
                 _database.UpdateOrderStatus (order.orderId, order.status);
+                
                 string deliverMsg = $"Order {order.status} by {order.photographerEmail}.";
-                //anropa next, kontrollera så den fungerar
                 bool orderstatusChangedOnHub = await ChangeOrderstatusOnHub (order, deliverMsg, token);
                 if (orderstatusChangedOnHub) {
                     return StatusCode (StatusCodes.Status200OK, new { message = deliverMsg });
@@ -96,7 +96,6 @@ namespace Photobox.Controllers {
         [HttpPost, Authorize]
         public IActionResult PostOrder ([FromBody] Order order) {
             try {
-                // skapa datum automatiskt och ta bort required från modellen
                 DateTime thisDay = DateTime.Now;
                 order.regDate = thisDay;
 
@@ -152,8 +151,7 @@ namespace Photobox.Controllers {
                 new AuthenticationHeaderValue ("Basic", "Vml0ZWNmb3RvcG9ydGFsOmFtSzlzY0VnSnpNd1Bqckdack03bUNIY1llWEdsbmxDdEIyQ3JweHU0YTlIa25Eektn");
 
             string uri = order.installationId + "/Orders/" + order.orderId + "/Status?message=" + msg + "&status=" + order.status + "&url=" + "https://fotoportal.azurewebsites.net/maklare";
-            // https://hubtest.megler.vitec.net/MSVPAR/Orders/5943c954-361e-4676-a094-e3aec7c3073c/Status?message=SetToInProgress&status=InProgress&url=https://fotoportal.azurewebsites.net/maklare
-
+          
             dynamic response = await client.PostAsync (uri, null);
             if (response.StatusCode == HttpStatusCode.NoContent) {
                 return true;
