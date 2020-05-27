@@ -106,7 +106,7 @@ namespace Photobox.Controllers {
                         _database.UpdateOrder (orderInDb);
                         string updatedMsg = $"Order {order.status} with {order.photographerEmail} assigned as Photographer.";
                         // Calling hub
-                        bool orderstatusChangedOnHub = await OrderController.ChangeOrderstatusOnHub (order, updatedMsg, token);
+                        bool orderstatusChangedOnHub = await OrderController.ChangeOrderstatusOnHub (order, updatedMsg, token, _config);
                         if (orderstatusChangedOnHub) {
                             return StatusCode (StatusCodes.Status200OK, new { message = updatedMsg });
                         } else {
@@ -119,7 +119,7 @@ namespace Photobox.Controllers {
                     _database.UpdateOrderStatus (orderId, order.status);
                     string cancelledMsg = "Order 'Cancelled'.";
                     // Calling hub
-                    bool orderstatusChangedOnHub = await OrderController.ChangeOrderstatusOnHub (order, cancelledMsg, token);
+                    bool orderstatusChangedOnHub = await OrderController.ChangeOrderstatusOnHub (order, cancelledMsg, token, _config);
                     if (orderstatusChangedOnHub) {
                         return StatusCode (StatusCodes.Status200OK, new { message = cancelledMsg });
                     } else {

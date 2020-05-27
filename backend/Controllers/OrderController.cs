@@ -74,7 +74,7 @@ namespace Photobox.Controllers {
                 _database.UpdateOrderStatus (order.orderId, order.status);
                 
                 string deliverMsg = $"Order {order.status} by {order.photographerEmail}.";
-                bool orderstatusChangedOnHub = await ChangeOrderstatusOnHub (order, deliverMsg, token);
+                bool orderstatusChangedOnHub = await ChangeOrderstatusOnHub (order, deliverMsg, token, _config);
                 if (orderstatusChangedOnHub) {
                     return StatusCode (StatusCodes.Status200OK, new { message = deliverMsg });
                 } else {
@@ -141,7 +141,11 @@ namespace Photobox.Controllers {
             }
         }
 
-        public static async Task<bool> ChangeOrderstatusOnHub (UpdatedOrder order, string msg, string token) {
+        // TODO
+        // Move this function into separate helper function along with all Next calls,
+        // that can be used for both Norwegian and Swedish API
+        // then we don't have to use it as static and pass config as parameter (bad practice)
+        public static async Task<bool> ChangeOrderstatusOnHub (UpdatedOrder order, string msg, string token, IConfiguration _config) {
             HttpClient client = new HttpClient ();
 
             client.BaseAddress = new Uri ("https://hubtest.megler.vitec.net/");
@@ -150,7 +154,7 @@ namespace Photobox.Controllers {
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue ("Basic", "Vml0ZWNmb3RvcG9ydGFsOmFtSzlzY0VnSnpNd1Bqckdack03bUNIY1llWEdsbmxDdEIyQ3JweHU0YTlIa25Eektn");
 
-            string uri = order.installationId + "/Orders/" + order.orderId + "/Status?message=" + msg + "&status=" + order.status + "&url=" + "https://fotoportal.azurewebsites.net/maklare";
+            string uri = order.installationId + "/Orders/" + order.orderId + "/Status?message=" + msg + "&status=" + order.status + "&url=" + _config["SiteBaseUrl"] + "/maklare";
           
             dynamic response = await client.PostAsync (uri, null);
             if (response.StatusCode == HttpStatusCode.NoContent) {
